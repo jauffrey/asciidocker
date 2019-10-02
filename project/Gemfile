@@ -1,0 +1,7 @@
+source 'https://rubygems.org'
+
+gem 'asciidoctor-revealjs' # latest released version
+gem 'asciidoctor-pdf'
+gem 'rouge'
+gem 'pygments.rb'
+gem 'coderay'

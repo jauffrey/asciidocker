@@ -1,0 +1,10 @@
+---
+# tasks file for ansible-role-asciidoc-content-exporter
+- include_tasks: install.yml
+- include_tasks: build_presentation.yml
+  when: presentation_content is defined
+- include_tasks: build_pdf.yml
+  when: pdf_content is defined
+- name: debug
+  debug:
+    msg: "{{presentation_content}} {{pdf_content}}"

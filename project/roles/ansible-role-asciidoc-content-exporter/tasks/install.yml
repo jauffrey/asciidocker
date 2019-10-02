@@ -1,0 +1,33 @@
+---
+- name: Check if local Gems are available
+  stat: 
+    path: "{{export_dir}}/.bundle"
+  register: bundle
+- name: Install gems using bundler 
+  bundler:
+    state: present
+    binstub_directory: "{{export_dir}}/.bundle/.bin/"
+    gem_path: "{{export_dir}}/.bundle/gems/"
+    executable: /usr/lib/fullstaq-ruby/versions/2.6/bin/bundler
+    local: "{{bundle.stat.exists}}"
+- name: Check if node_modules exists
+  stat: 
+    path: "{{export_dir}}/node_modules"
+  register: node_modules
+- name: Install sass using npm
+  npm:
+    name: sass
+    path: "{{export_dir}}/node_modules"
+    global: no
+  when: node_modules.stat.exists == False
+- name: Check if reveal.js file exists
+  stat: 
+    path: "{{export_dir}}/reveal.js"
+  register: reveal_js
+- name: Checkout reveal.js 
+  git:
+    repo: 'https://github.com/hakimel/reveal.js.git'
+    dest: "{{export_dir}}/reveal.js"
+    depth: 1
+    version: "{{reveal_js_version}}"
+  when: reveal_js.stat.exists == False

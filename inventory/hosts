@@ -1,0 +1,4 @@
+[presentation]
+localhost ansible_connection=local
+[pdf]
+localhost ansible_connection=local

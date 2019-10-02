@@ -1,0 +1,8 @@
+[fullstaq-ruby]
+name=fullstaq-ruby
+baseurl=https://yum.fullstaqruby.org/centos-7/$basearch
+gpgcheck=0
+repo_gpgcheck=1
+enabled=1
+gpgkey=https://raw.githubusercontent.com/fullstaq-labs/fullstaq-ruby-server-edition/master/fullstaq-ruby.asc
+sslverify=1

@@ -1,0 +1,10 @@
+---
+- name: "[PDF]: Clean {{export_dir}} folder"
+  file:
+    path: "{{item}}"
+    state: absent
+  with_fileglob: "{{export_dir}}/*.pdf"
+- name: "[PDF]: PDF Content export"
+  # Note: Content dir here is relative to the location of the merged presentation. So we need to go back to the root of the project
+  command: "{{export_dir}}/.bundle/.bin/asciidoctor-pdf {{item}} -D {{export_dir}}"
+  with_items: "{{pdf_content}}"
