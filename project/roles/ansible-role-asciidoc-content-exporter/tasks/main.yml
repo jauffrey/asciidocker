@@ -1,10 +1,16 @@
 ---
 # tasks file for ansible-role-asciidoc-content-exporter
+- fail:
+    msg: Configuration not found! Make sure you have defined at least 1 collection (presentation or pdf)
+  when: presentation is undefined or pdf is undefined
 - include_tasks: install.yml
 - include_tasks: build_presentation.yml
-  when: presentation_content is defined
+  loop: "{{ presentation|dict2items }}"
+  loop_control: 
+    loop_var: presentations
+  when: presentation is defined
 - include_tasks: build_pdf.yml
-  when: pdf_content is defined
-- name: debug
-  debug:
-    msg: "{{presentation_content}} {{pdf_content}}"
+  loop: "{{ pdf|dict2items }}"
+  loop_control: 
+    loop_var: pdfs
+  when: pdf is defined
