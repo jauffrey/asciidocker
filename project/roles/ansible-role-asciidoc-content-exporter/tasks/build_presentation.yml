@@ -1,19 +1,32 @@
 ---
-- name: "[PRESENTATION]: Clean {{export_dir}} folder"
-  file:
-    path: "{{export_dir}}/{{presentations.key}}.ad"
-    state: absent
-- name: "[PRESENTATION]: Content aggregation"
-  lineinfile: 
-    dest: "{{export_dir}}/{{presentations.key}}.ad"
-    line: "{{ item }}"
-    create: yes
-  with_file: "{{presentations.value}}"
-
-- name: Check if custom css files exists
+- name: "[PRESENTATION]: Check if custom css files exists"
   stat: 
     path: "{{sass_dir}}"
   register: themes
+
+- name: "[PRESENTATION]: Remove {{presentations.key}} in {{export_dir}} folder"
+  file:
+    path: "{{export_dir}}/{{presentations.key}}"
+    state: absent
+
+- name: "[PRESENTATION]: Remove {{presentations.key}}.ad in {{export_dir}} folder because of uncommitted changes"
+  file:
+    path: "{{export_dir}}/{{presentations.key}}.ad"
+    state: absent
+  when: git_output.stdout_lines| list | length > 0
+
+- name: "[PRESENTATION]: Check if merged document exists"
+  stat:
+    path: "{{export_dir}}/{{presentations.key}}.ad"
+  register: presentation_stat
+  
+- name: "[PRESENTATION]: Content aggregation"
+  lineinfile: 
+    dest: "{{export_dir}}/{{presentations.key}}.ad"
+    line: "{{lookup('file', item )}}"
+    create: yes
+  loop: "{{presentations.value}}"
+  when: presentation_stat.stat.exists == False
 
 - name: "[PRESENTATION]: Build and add custom theme"
   command: "node {{export_dir}}/node_modules/.bin/sass {{sass_dir}}/{{theme_name}}.scss {{export_dir}}/reveal.js/css/theme/{{theme_name}}.css"
@@ -27,4 +40,4 @@
 
 - name: "[PRESENTATION]: HTML Content export"
   # Note: Content dir here is relative to the location of the merged presentation. So we need to go back to the root of the project
-  command: "{{export_dir}}/.bundle/.bin/asciidoctor-revealjs -a content_dir=../{{content_dir}} {{export_dir}}/{{presentations.key}}.ad -D {{export_dir}} -o {{presentations.key}}.html"
+  command: "{{export_dir}}/.bundle/.bin/asciidoctor-revealjs -a content_dir=../{{content_dir}} {{export_dir}}/{{presentations.key}}.ad -D {{export_dir}} -o {{presentations.key}}"

@@ -4,6 +4,9 @@
     msg: Configuration not found! Make sure you have defined at least 1 collection (presentation or pdf)
   when: presentation is undefined or pdf is undefined
 - include_tasks: install.yml
+- name: "Check for local modifications ..."
+  shell: "git submodule --quiet foreach git status -s --porcelain | awk -v var='{{content_dir}}/' '{print var $2}' "
+  register: git_output
 - include_tasks: build_presentation.yml
   loop: "{{ presentation|dict2items }}"
   loop_control: 

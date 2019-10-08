@@ -5,4 +5,4 @@ content_dir: content                            # Local content directory. Usual
 themes_dir: themes                              # Local themes directory (optional), relative to project path
 theme_name: custom.scss                         # Default name for the custom theme to be used
 reveal_js_version: 3.8.0                        # Version of reveal.js to be used
-sass_dir: "{{themes_dir}}/{{theme_name}}"      # Default path to sass 
+sass_dir: "{{themes_dir}}/{{theme_name}}"       # Default path to sass 
