@@ -1,9 +1,19 @@
 ---
 # tasks file for ansible-role-asciidoc-content-exporter
+- name: Check configuration is present
+  stat:
+    path: "{{work_dir}}/config.yml"
+  register: config_stat
 - name: Include configuration variables
   include_vars: "{{work_dir}}/config.yml"
+  when: config_stat.stat.exists == True
+- name: Copy sample configuration
+  copy:
+    dest: "{{work_dir}}" 
+    src: config.yml.sample 
+  when: config_stat.stat.exists == False
 - fail:
-    msg: Configuration not found! Make sure you have defined at least 1 collection (presentation or pdf)
+    msg: "Cannot run the process: Configuration not found! Don't worry. A sample file config.yml.sample has been created! Remove the .sample and restart the export process."
   when: presentation is undefined or pdf is undefined
 - include_tasks: install.yml
 - name: "Check for local modifications ..."
