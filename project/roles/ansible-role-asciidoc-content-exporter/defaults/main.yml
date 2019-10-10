@@ -1,6 +1,6 @@
 ---
 # defaults file for ansible-role-asciidoc-content-exporter
-work_dir: work                                  # Default work dir, represents the actual project
+work_dir: work                                  # Default work dir, represents the actual project when run in a container
 export_dir: "{{work_dir}}/dist"                 # Where files will be exported, relative to project path 
 content_dir: "{{work_dir}}/content"             # Local content directory. Usually an aggregation of submodules, relative to project path
 themes_dir: "{{work_dir}}/themes"               # Local themes directory (optional), relative to project path

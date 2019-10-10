@@ -4,28 +4,41 @@
   stat:
     path: "{{work_dir}}/config.yml"
   register: config_stat
+
 - name: Include configuration variables
   include_vars: "{{work_dir}}/config.yml"
   when: config_stat.stat.exists == True
+
 - name: Copy sample configuration
   copy:
     dest: "{{work_dir}}" 
     src: config.yml.sample 
   when: config_stat.stat.exists == False
-- fail:
-    msg: "Cannot run the process: Configuration not found! Don't worry. A sample file config.yml.sample has been created! Remove the .sample and restart the export process."
-  when: presentation is undefined or pdf is undefined
+
+- name: Copy docker-compose.yml
+  copy:
+    dest: "{{work_dir}}" 
+    src: docker-compose.yml
+  when: config_stat.stat.exists == False
+
+- name: Fail if configuration is not properly set
+  fail:
+    msg: "Cannot run the process: Configuration not found! Don't worry. A sample config.yml.sample and a docker-compose.yml have been created! 
+    Rename the config.yml.sample to config.yml and restart the export process, using the same command or 'docker-compose run export' command."
+  when: presentation is undefined and pdf is undefined
+
 - include_tasks: install.yml
+
 - name: "Check for local modifications ..."
   shell: "git submodule --quiet foreach git status -s --porcelain | awk -v var='{{content_dir}}/' '{print var $2}' "
   register: git_output
+
 - include_tasks: build_presentation.yml
-  loop: "{{ presentation|dict2items }}"
+  loop: "{{ presentation | default({}) | dict2items }}"
   loop_control: 
     loop_var: presentations
-  when: presentation is defined
+
 - include_tasks: build_pdf.yml
-  loop: "{{ pdf|dict2items }}"
+  loop: "{{ pdf | default({}) | dict2items }}"
   loop_control: 
     loop_var: pdfs
-  when: pdf is defined

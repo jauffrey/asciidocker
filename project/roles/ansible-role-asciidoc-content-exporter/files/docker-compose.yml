@@ -1,0 +1,7 @@
+version: "3.7"
+services:
+  export:
+    tty: true
+    image: jauffrey/asciidocker:latest
+    volumes:
+      - .:/runner/project/work
