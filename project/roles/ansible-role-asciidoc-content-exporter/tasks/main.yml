@@ -21,6 +21,12 @@
     src: docker-compose.yml
   when: config_stat.stat.exists == False
 
+- name: Copy .gitignore file
+  template:
+    dest: "{{work_dir}}/.gitignore" 
+    src: .gitignore.j2
+  when: config_stat.stat.exists == False
+
 - name: Fail if configuration is not properly set
   fail:
     msg: "Cannot run the process: Configuration not found! Don't worry. A sample config.yml.sample and a docker-compose.yml have been created! 
