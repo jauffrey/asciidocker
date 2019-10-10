@@ -3,7 +3,7 @@
   stat: 
     path: "{{sass_dir}}"
   register: themes
-  
+
 - name: "[PRESENTATION]: Check if presentation exists"
   stat: 
     path: "{{export_dir}}/{{presentations.key}}"
@@ -33,6 +33,13 @@
     create: yes
   loop: "{{presentations.value}}"
   when: presentation_stat.stat.exists == False
+
+- name: "[PRESENTATION]: Add asciidocker support page"
+  lineinfile: 
+    dest: "{{export_dir}}/{{presentations.key}}{{asciidoc_extension}}"
+    line: "{{lookup('file', 'banner.adoc' )}}"
+    create: yes
+  when: presentation_stat.stat.exists == False and include_banner 
 
 - name: "[PRESENTATION]: Build and add custom theme"
   command: "node {{export_dir}}/node_modules/.bin/sass {{sass_dir}}/{{theme_name}}.scss {{export_dir}}/reveal.js/css/theme/{{theme_name}}.css"
