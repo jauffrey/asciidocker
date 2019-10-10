@@ -1,5 +1,7 @@
 ---
 # tasks file for ansible-role-asciidoc-content-exporter
+- name: Include configuration variables
+  include_vars: "{{work_dir}}/config.yml"
 - fail:
     msg: Configuration not found! Make sure you have defined at least 1 collection (presentation or pdf)
   when: presentation is undefined or pdf is undefined

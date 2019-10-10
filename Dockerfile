@@ -6,3 +6,4 @@ RUN /usr/lib/fullstaq-ruby/versions/2.6/bin/gem install bundler
 RUN ln -s /usr/lib/fullstaq-ruby/versions/2.6/bin/ruby /usr/bin/ruby
 ADD project /runner/project
 ADD inventory /runner/inventory
+CMD ["ansible-runner", "-r","ansible-role-asciidoc-content-exporter", "run", "/runner"]
