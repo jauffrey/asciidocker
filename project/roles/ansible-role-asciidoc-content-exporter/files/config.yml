@@ -1,11 +1,9 @@
 ---
 # All default variables in role can be overriden. Uncomment and change if needed.
-# export_dir: "{{work_dir}}/dist"                 # Where files will be exported, relative to project path 
-# content_dir: "{{work_dir}}/content"             # Local content directory. Usually an aggregation of submodules, relative to project path
-# themes_dir: "{{work_dir}}/themes"               # Local themes directory (optional), relative to project path
-# theme_name: custom.scss                         # Default name for the custom theme to be used
-# reveal_js_version: 3.8.0                        # Version of reveal.js to be used
-# sass_dir: "{{themes_dir}}/{{theme_name}}"       # Default path to sass
+#content_dir_name: content                        # Custom name for content dir
+#export_dir_name: dist                            # Custom name for export dir
+#themes_dir_name: themes                          # Custom name for themes dir
+#reveal_js_version: 3.8.0                         # Version of reveal.js to be used
 
 # IMPORTANT: Be sure to include the content_dir variable in the relative path to your content!
 presentation:                                     # Source content to include inside the rendered presentation. YAML list. 

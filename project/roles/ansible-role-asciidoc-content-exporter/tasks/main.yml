@@ -12,7 +12,7 @@
 - name: Copy sample configuration
   copy:
     dest: "{{work_dir}}" 
-    src: config.yml.sample 
+    src: config.yml 
   when: config_stat.stat.exists == False
 
 - name: Copy docker-compose.yml
@@ -24,13 +24,15 @@
 - name: Fail if configuration is not properly set
   fail:
     msg: "Cannot run the process: Configuration not found! Don't worry. A sample config.yml.sample and a docker-compose.yml have been created! 
-    Rename the config.yml.sample to config.yml and restart the export process, using the same command or 'docker-compose run export' command."
+    Edit config.yml by adding your file paths and restart the export process, using the same command or 'docker-compose run export' command."
   when: presentation is undefined and pdf is undefined
 
 - include_tasks: install.yml
 
-- name: "Check for local modifications ..."
-  shell: "git submodule --quiet foreach git status -s --porcelain | awk -v var='{{content_dir}}/' '{print var $2}' "
+- name: "Check for local modifications within submodules ..."
+  shell: "git submodule --quiet foreach 'if [[ $(git status -z | head -c1 | wc -c) -ne 0 ]]; then echo $path $(git status -z);fi'"
+  args:
+    chdir: "{{work_dir}}"
   register: git_output
 
 - include_tasks: build_presentation.yml

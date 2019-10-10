@@ -11,7 +11,7 @@
   file:
     path: "{{export_dir}}/{{pdfs.key}}{{asciidoc_extension}}"
     state: absent
-  when: git_output.stdout_lines| list | length > 0
+  when: git_output.stdout_lines | select('match', content_dir_name) | list | length > 0
 
 - name: "[PDF]: Check if merged document exists"
   stat:
@@ -29,3 +29,4 @@
 - name: "[PDF]: PDF Content export"
   # Note: Content dir here is relative to the location of the merged presentation. So we need to go back to the root of the project
   command: "{{export_dir}}/.bundle/.bin/asciidoctor-pdf {{export_dir}}/{{pdfs.key}}{{asciidoc_extension}} -D {{export_dir}} -o {{pdfs.key}}"
+  when: pdf_stat.stat.exists == False
