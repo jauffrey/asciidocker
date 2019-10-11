@@ -8,7 +8,7 @@ themes_dir_name: themes                          # Custom name for themes dir
 reveal_js_version: 3.8.0                         # Version of reveal.js to be used
 include_banner: true                             # Adds an asciidocker banner for project support at the end of presentations/PDF
 modification_checks: local                       # How the monitoring of changes should be handled: git (via submodules status) or local (always rebuild)
-images_dir: "../{{content_dir_name}}"            # Images dir variable. Path from export_dir to content_dir, to be referenced in Asciidoctor's :images_dir:
+content_root: "../{{content_dir_name}}"          # Path from export_dir to content_dir, to be referenced in Asciidoctor's :imagesdir: as a helper
 
 # Internal variables - should not be changed                        
 sass_dir: "{{themes_dir}}/{{theme_name}}"        # Default path to sass 
