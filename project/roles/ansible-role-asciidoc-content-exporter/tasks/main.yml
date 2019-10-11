@@ -29,8 +29,13 @@
 
 - name: Fail if configuration is not properly set
   fail:
-    msg: "Cannot run the process: Configuration not found! Don't worry. A sample config.yml.sample and a docker-compose.yml have been created! 
-    Edit config.yml by adding your file paths and restart the export process, using the same command or 'docker-compose run export' command."
+    msg: 
+    - "Cannot run the process: Configuration not found!"
+    - "Don't worry. A sample config.yml and a docker-compose.yml have been created!"
+    - "Next steps:"
+    - "- Populate your {{content_dir_name}} folder with asciidoc content"
+    - "- Edit config.yml by adding your files"
+    - "- Restart the export process, using the same command or 'docker-compose run export' command."
   when: presentation is undefined and pdf is undefined
 
 - include_tasks: install.yml
