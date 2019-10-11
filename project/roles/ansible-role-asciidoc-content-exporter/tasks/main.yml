@@ -46,6 +46,9 @@
     chdir: "{{work_dir}}"
   register: git_output
 
+- set_fact:
+    rebuild_item: (git_output.stdout_lines | select('match', content_dir_name) | list | length > 0) or (modification_checks == "local")
+
 - include_tasks: build_presentation.yml
   loop: "{{ presentation | default({}) | dict2items }}"
   loop_control: 

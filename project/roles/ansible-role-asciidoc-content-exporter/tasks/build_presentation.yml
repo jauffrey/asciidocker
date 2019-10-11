@@ -13,13 +13,13 @@
   file:
     path: "{{export_dir}}/{{presentations.key}}"
     state: absent
-  when: git_output.stdout_lines | select('match', content_dir_name) | list | length > 0
+  when: rebuild_item
 
 - name: "[PRESENTATION]: Remove {{presentations.key}}{{asciidoc_extension}} in {{export_dir}} folder because of uncommitted changes"
   file:
     path: "{{export_dir}}/{{presentations.key}}{{asciidoc_extension}}"
     state: absent
-  when: git_output.stdout_lines | select('match', content_dir_name) | list | length > 0
+  when: rebuild_item
 
 - name: "[PRESENTATION]: Check if merged document exists"
   stat:
@@ -54,4 +54,4 @@
 - name: "[PRESENTATION]: HTML Content export"
   # Note: Content dir here is relative to the location of the merged presentation. So we need to go back to the root of the project
   command: "{{export_dir}}/.bundle/.bin/asciidoctor-revealjs -a content_dir=../{{content_dir}} {{export_dir}}/{{presentations.key}}{{asciidoc_extension}} -D {{export_dir}} -o {{presentations.key}}"
-  when: presentation_export_stat.stat.exists == False or presentation_stat.stat.exists == False or themes.stat.exists == True
+  when: rebuild_item or themes.stat.exists == True
