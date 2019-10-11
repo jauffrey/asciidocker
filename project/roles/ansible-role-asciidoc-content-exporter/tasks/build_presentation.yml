@@ -53,5 +53,5 @@
 
 - name: "[PRESENTATION]: HTML Content export"
   # Note: Content dir here is relative to the location of the merged presentation. So we need to go back to the root of the project
-  command: "{{export_dir}}/.bundle/.bin/asciidoctor-revealjs -a content_dir=../{{content_dir}} {{export_dir}}/{{presentations.key}}{{asciidoc_extension}} -D {{export_dir}} -o {{presentations.key}}"
+  command: "{{export_dir}}/.bundle/.bin/asciidoctor-revealjs -a content_dir=../{{content_dir_name}} {{export_dir}}/{{presentations.key}}{{asciidoc_extension}} -D {{export_dir}} -o {{presentations.key}}"
   when: rebuild_item or themes.stat.exists == True
