@@ -8,10 +8,9 @@ themes_dir_name: themes                          # Custom name for themes dir
 theme_name: custom                               # Default name for the custom theme to be used (SCSS name, without extension)
 reveal_js_version: 3.8.0                         # Version of reveal.js to be used
 include_banner: true                             # Adds an asciidocker banner for project support at the end of presentations/PDF
-modification_checks: local                       # How the monitoring of changes should be handled: git (via submodules status) or local (always rebuild)
+conditional_rebuild: never                       # How the monitoring of changes should be handled: git (via submodules status) or local (always rebuild)
 
 # Internal variables - should not be changed                        
-sass_dir: "{{themes_dir}}/{{theme_name}}"        # Default path to sass 
 asciidoc_extension: .adoc                        # Default extension for asciidoc files
 export_dir: "{{work_dir}}/{{export_dir_name}}"   # Where files will be exported, relative to project path 
 content_dir: "{{work_dir}}/{{content_dir_name}}" # Local content directory. Usually an aggregation of submodules, relative to project path

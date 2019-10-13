@@ -1,9 +1,4 @@
 ---
-- name: "[PDF]: Check if custom css files exists"
-  stat: 
-    path: "{{sass_dir}}"
-  register: themes
-
 - name: "[PDF]: Check if final document exists"
   stat:
     path: "{{export_dir}}/{{pdfs.key}}"
@@ -31,7 +26,7 @@
     dest: "{{export_dir}}/{{pdfs.key}}{{asciidoc_extension}}"
     line: "{{lookup('file', item )}}"
     create: yes
-  loop: "{{pdfs.value}}"
+  loop: "{{pdfs.value.content}}"
   when: pdf_stat.stat.exists == False
 
 - name: "[PDF]: Add asciidocker support page"

@@ -1,7 +1,15 @@
 ---
+- name: "[PRESENTATION]: Override theme_name if defined on presentation level. Defaults to {{theme_name}}"
+  set_fact:
+    theme_name: "{{presentations.value.theme | default(theme_name)}}"
+
+- name: "[PRESENTATION]: Set theme_dir"
+  set_fact:
+    theme_dir: "{{themes_dir}}/{{theme_name}}"
+
 - name: "[PRESENTATION]: Check if custom css files exists"
   stat: 
-    path: "{{sass_dir}}"
+    path: "{{theme_dir}}"
   register: themes
 
 - name: "[PRESENTATION]: Check if presentation exists"
@@ -25,13 +33,13 @@
   stat:
     path: "{{export_dir}}/{{presentations.key}}{{asciidoc_extension}}"
   register: presentation_stat
-
+    
 - name: "[PRESENTATION]: Content aggregation"
   lineinfile: 
     dest: "{{export_dir}}/{{presentations.key}}{{asciidoc_extension}}"
     line: "{{lookup('file', item )}}"
     create: yes
-  loop: "{{presentations.value}}"
+  loop: "{{presentations.value.content}}"
   when: presentation_stat.stat.exists == False
 
 - name: "[PRESENTATION]: Add asciidocker support page"
@@ -39,16 +47,16 @@
     dest: "{{export_dir}}/{{presentations.key}}{{asciidoc_extension}}"
     line: "{{lookup('file', 'banner.adoc' )}}"
     create: yes
-  when: presentation_stat.stat.exists == False and include_banner 
+  when: presentation_stat.stat.exists == False and include_banner
 
-- name: "[PRESENTATION]: Build and add custom theme"
-  command: "node {{export_dir}}/node_modules/.bin/sass {{sass_dir}}/{{theme_name}}.scss {{export_dir}}/reveal.js/css/theme/{{theme_name}}.css"
-  when: themes.stat.exists == True
-
-- name: "[PRESENTATION]: Build and add custom theme"
+- name: "[PRESENTATION]: Copy {{theme_name}}.scss to reveal.js themes dir"
   copy:
-      dest: "{{export_dir}}/reveal.js/css/theme/" # required. Remote absolute path where the file should be copied to. If I(src) is a directory, this must be a directory too. If I(dest) is a nonexistent path and if either I(dest) ends with "/" or I(src) is a directory, I(dest) is created. If I(src) and I(dest) are files, the parent directory of I(dest) isn't created: the task fails if it doesn't already exist.
-      src: "{{sass_dir}}/" # not required. Local path to a file to copy to the remote server; can be absolute or relative. If path is a directory, it is copied recursively. In this case, if path ends with "/", only inside contents of that directory are copied to destination. Otherwise, if it does not end with "/", the directory itself with all contents is copied. This behavior is similar to Rsync.
+      dest: "{{export_dir}}/reveal.js/css/theme/source/" 
+      src: "{{theme_dir}}/" 
+  when: themes.stat.exists == True 
+
+- name: "[PRESENTATION]: Build custom theme"
+  command: "node {{export_dir}}/node_modules/.bin/sass {{export_dir}}/reveal.js/css/theme/source/{{theme_name}}.scss {{export_dir}}/reveal.js/css/theme/{{theme_name}}.css"
   when: themes.stat.exists == True
 
 - name: "[PRESENTATION]: HTML Content export"
