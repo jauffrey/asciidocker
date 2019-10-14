@@ -9,6 +9,7 @@ theme_name: custom                               # Default name for the custom t
 reveal_js_version: 3.8.0                         # Version of reveal.js to be used
 include_banner: true                             # Adds an asciidocker banner for project support at the end of presentations/PDF
 conditional_rebuild: never                       # How the monitoring of changes should be handled: git (via submodules status) or local (always rebuild)
+debug: false
 
 # Internal variables - should not be changed                        
 asciidoc_extension: .adoc                        # Default extension for asciidoc files

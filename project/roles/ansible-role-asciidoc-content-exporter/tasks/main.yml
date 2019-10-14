@@ -40,11 +40,25 @@
 
 - include_tasks: install.yml
 
+- name: Copy global ignore file to home dir
+  copy:
+    src: .gitignore_globals 
+    dest: ~/.gitignore_globals
+  when: conditional_rebuild == "git"
+  
+- name: Configure git for conditional rebuild
+  shell: "git config --global core.excludesfile ~/.gitignore_globals"
+  when: conditional_rebuild == "git"
+
 - name: "Check for local modifications within submodules ..."
   shell: "git submodule --quiet foreach 'if [[ $(git status -z | head -c1 | wc -c) -ne 0 ]]; then echo $path $(git status -z);fi'"
   args:
     chdir: "{{work_dir}}"
   register: git_output
+
+- debug:
+    var: git_output
+  when: debug
 
 - set_fact:
     rebuild_item: (git_output.stdout_lines | select('match', content_dir_name) | list | length > 0) or (conditional_rebuild == "never")
