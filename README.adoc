@@ -1,0 +1,58 @@
+= Asciidocker: Supercharged docker container for Asciidoc publishing
+:source-highlighter: coderay
+
+== Why? There is Asciidoctor Docker Container already.
+Yes. But the official Asciidoctor Docker Container solves only one part of the problem, the conversion of your asciidoc content to various formats.
+The goal of this project is to *prepare* the documents, as well as providing a publication workflow based on various sources. 
+In short, use this project if you use multiple asciidoc files and you want to merge those into a specific output format (revealjs, PDF). 
+
+== How to use Asciidocker
+This project aims at providing a simple way to merge and publish asciidoc content. It uses standard tools (git, docker), so that the publishing expertience is easy and straighforward.
+
+Here are the steps you need to do in order to publish some content with asciidocker: 
+* Create a new folder 
+* Run the following command:
+[source,bash]
+----
+docker run -t -v <your folder>:/runner/project/work jauffrey/asciidocker
+----
+
+** This will create a config.yml file where you can reference the content to be created, as well as a content folder (if not already present) that will contain your asciidoc content.
+* Create some asciidoc content in the content folder (the name of the content folder is customizable in the config.yml)
+* Update the config.yml file accordingly and re-run the process
+** for convenience, you can run (in the folder you just created)
+[source,bash]
+----
+docker-compose run export
+----
+* Et Voilà! Your content has just been converted to an output format. 
+
+Asciidocker currently supports PDF and Reveal.js exports, with custom themes if a theme directory has been specified
+
+== Technical insights
+Asciidocker is a simple wrapper to an Ansible role that automates all the necessary steps to aggregate, style and export the content using asciidoctor. It's currently based on the official ansible-runner docker image, and the Ansible role is configured to download and install any dependency (revealjs, sass, asciidoctor) so that the output of the process (in dist folder) can be directly published if required. 
+
+== Git & Asciidocker
+If you are using git, you can organize this content folder using git submodules, if for example you have multiple content repositories, create one submodule per repo in the content folder. This allows you to have a consistent view of your content, track changes and maybe push some updates if needed.
+The current implementation has an experimental *conditional_rebuild* featue, and when set to *git*, it will use output from the git repository status to check if the content folder has beed altered, and in this case launch a rebuild of the projects only if necessary. That's particularly useful when generating PDFs using asciidoctor-pdf, because the process may take some time to complete. 
+
+== Best practices for creating a presentation
+When using asciidoctor-reveal.js, the first page of you presentation contains some special flags. We recommend splitting the first slide in a separate asciidoc document. Then, just reference it in your config.yml and start exporting!
+
+== Custom themes for reveal.js
+Asciidocker was initially built to rapidly build and publish Reveal.js presentations, so it has embedded support for theming through SCSS. It is based on naming conventions, so there are few steps to follow.
+What is required: 
+
+* Create a themes folder at the root of your project
+* Create a subfolder and give it a name 
+* In this subflolder, create a .scss file with *the exact same name as the previously created folder*
+* Create whatever support file you would need to customize your CSS
+* Enable rendering of the theme in config.yml by specifying the theme name (which is, in this case, your folder name)
+
+Beware that: 
+
+* The .scss file is copied by Asciidocker into the reveal.js installation, the same way the other themes (from reveal.js) are organized. This is specially important because the references are relative to reveal.js' source folder 
+* sass is then executed and the css is exported into the css folder
+
+
+Then you just have to change the :revealjs_theme: property in your asciidoc document to the theme name and it will be applied in the resulting HTML export.
