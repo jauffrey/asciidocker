@@ -45,7 +45,7 @@
     src: .gitignore_globals 
     dest: ~/.gitignore_globals
   when: conditional_rebuild == "git"
-  
+
 - name: Configure git for conditional rebuild
   shell: "git config --global core.excludesfile ~/.gitignore_globals"
   when: conditional_rebuild == "git"
@@ -61,7 +61,7 @@
   when: debug
 
 - set_fact:
-    rebuild_item: (git_output.stdout_lines | select('match', content_dir_name) | list | length > 0) or (conditional_rebuild == "never")
+    rebuild_item: (git_output.stdout_lines | select('match', content_dir_name) | list | length > 0) or (conditional_rebuild != "git")
 
 - include_tasks: build_presentation.yml
   loop: "{{ presentation | default({}) | dict2items }}"
