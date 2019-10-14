@@ -10,6 +10,7 @@ In short, use this project if you use multiple asciidoc files and you want to me
 This project aims at providing a simple way to merge and publish asciidoc content. It uses standard tools (git, docker), so that the publishing expertience is easy and straighforward.
 
 Here are the steps you need to do in order to publish some content with asciidocker: 
+
 * Create a new folder 
 * Run the following command:
 [source,bash]
