@@ -52,6 +52,7 @@
 
 - name: "Check for local modifications within submodules ..."
   shell: "git submodule --quiet foreach 'if [[ $(git status -z | head -c1 | wc -c) -ne 0 ]]; then echo $path $(git status -z);fi'"
+  when: conditional_rebuild == "git"
   args:
     chdir: "{{work_dir}}"
   register: git_output
