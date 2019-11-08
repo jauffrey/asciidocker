@@ -3,4 +3,4 @@
 <<<
 [%notitle]
 == About this document
-Made with icon:heart[2x] by https://github.com/asciidocker/asciidocker[*asciidocker project*] on icon:github[2x]
+Made with icon:heart[2x] by https://github.com/jauffrey/asciidocker[*asciidocker project*] on icon:github[2x]

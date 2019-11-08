@@ -62,7 +62,11 @@
   when: debug
 
 - set_fact:
-    rebuild_item: (git_output.stdout_lines | select('match', content_dir_name) | list | length > 0) or (conditional_rebuild != "git")
+    rebuild_item: (conditional_rebuild != "git") or (git_output.stdout_lines | select('match', content_dir_name) | list | length > 0)
+
+- debug:
+    var: rebuild_item
+  when: debug
 
 - include_tasks: build_presentation.yml
   loop: "{{ presentation | default({}) | dict2items }}"
